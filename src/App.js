@@ -7,35 +7,42 @@ import {
   Redirect
 } from "react-router-dom";
 
+
 import Users from './components/users';
 import Home from './components/home';
 import Login from './components/login';
 
+
+import AuthenticationService from './services/authenticationService';
+
 class App extends Component {
+  
   state = {
-    loggedIn: false
+    isAuthenticated : AuthenticationService.isAuthenticated()
   }
 
-  Users() {
+  renderUsers() {
     return <Users />;
   }
 
-  Navbar = () => {
-    if (this.state.loggedIn) {
-      return <Navbar />;
-    }
-  }
+    
 
   render() {
+    let navbar;
+    if (this.state.isAuthenticated) {
+      navbar = <Navbar />;
+    }
+
     return (
       <Router>
+        {navbar}
         <React.Fragment>
           <Switch>
             <Route path={'/login'} component={Login} />
             <Route path={'/home'} component={Home} />
-            <Route path="/users"> <Users /> </Route>
+            <Route path={'/users'} component={Users} />
             <Route exact path="/" render={() => (
-              this.state.loggedIn ? (<Redirect to="/home" />) : (<Redirect to="/login" />))}
+              this.state.isAuthenticated ? (<Redirect to="/home" />) : (<Redirect to="/login" />))}
             />
           </Switch>
         </React.Fragment>

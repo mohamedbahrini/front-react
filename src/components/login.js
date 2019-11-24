@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import AuthenticationService from '../services/authenticationService';
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             fields: {
@@ -41,13 +42,15 @@ class Login extends Component {
         return formIsValid;
     }
 
-    loginSubmit(e) {
+    loginSubmit = (e) => {
         e.preventDefault();
 
         if (this.handleValidation()) {
-            alert("Form submitted");
+            console.log("Form submitted", this.state.fields);
+            AuthenticationService.saveToken('token');
+            this.props.history.push('/home');
         } else {
-            alert("Form has errors.")
+            console.log("Form has errors.", this.state.fields);
         }
 
     }
@@ -69,7 +72,7 @@ class Login extends Component {
 
                     <div className="form-group">
                         <label>Password</label>
-                        <input type="password" className="form-control" refs="password" placeholder="Password"  onChange={this.handleChange.bind(this, "password")} value={this.state.fields["password"]} />
+                        <input type="password" className="form-control" refs="password" placeholder="Password" onChange={this.handleChange.bind(this, "password")} value={this.state.fields["password"]} />
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
